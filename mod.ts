@@ -199,21 +199,38 @@ class Result {
 
   all() {
     let data = new Array(this.rowCount);
-    let rowData = new Array(this.fieldCount)
-    while(true) {
+    let rowData = new Array(this.fieldCount);
+    while (true) {
       const row = mysql_fetch_row(this.#handle);
       if (row === 0) break;
       const b = getArrayBuffer(row, rowData.length * 8);
       const vui = new Uint32Array(b);
       let j = 0;
-      for (let i = 0; i < rowData.length; i++) { 
+      for (let i = 0; i < rowData.length; i++) {
         const n1 = vui[j] + 2 ** 32 * vui[j + 1];
         rowData[i] = getCString(n1);
         j += 2;
       }
       data.push(rowData);
     }
-  
+
     return data;
+  }
+
+  *[Symbol.iterator]() {
+    let rowData = new Array(this.fieldCount);
+    while (true) {
+      const row = mysql_fetch_row(this.#handle);
+      if (row === 0) break;
+      const b = getArrayBuffer(row, rowData.length * 8);
+      const vui = new Uint32Array(b);
+      let j = 0;
+      for (let i = 0; i < rowData.length; i++) {
+        const n1 = vui[j] + 2 ** 32 * vui[j + 1];
+        rowData[i] = getCString(n1);
+        j += 2;
+      }
+      yield rowData;
+    }
   }
 }

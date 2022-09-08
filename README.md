@@ -39,8 +39,8 @@ stmt.close();
 
 // -- Transactions
 
-const tx = conn.tx(conn => {
+const tx = conn.tx((conn) => {
   conn.execute("...");
-  return conn.query("...")
+  return conn.query("...");
 });
 ```
