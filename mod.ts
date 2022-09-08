@@ -91,6 +91,7 @@ const {
   symbols,
 ).symbols;
 
+const { getArrayBuffer, getCString } = Deno.UnsafePointerView;
 const encode = Deno.core?.encode || ((s) => new TextEncoder().encode(s));
 function cstr(str?: string) {
   return str ? encode(str + "\0") : null;
@@ -114,10 +115,6 @@ class Statement {
   close() {
     mysql_stmt_close(this.#stmt);
   }
-}
-
-function getCString(v) {
-  return Deno.UnsafePointerView.getCString(v);
 }
 
 function unwrapErr(e) {
@@ -202,20 +199,18 @@ class Result {
 
   all() {
     let data = new Array(this.rowCount);
-    let row;
+    let rowData = new Array(this.fieldCount)
     while(true) {
-      row = mysql_fetch_row(this.#handle);
+      const row = mysql_fetch_row(this.#handle);
       if (row === 0) break;
-
-      const rowData = new Array(this.fieldCount);
-      const b = Deno.UnsafePointerView.getArrayBuffer(row, rowData.length * 8);
+      const b = getArrayBuffer(row, rowData.length * 8);
       const vui = new Uint32Array(b);
       let j = 0;
       for (let i = 0; i < rowData.length; i++) { 
         const n1 = vui[j] + 2 ** 32 * vui[j + 1];
         rowData[i] = getCString(n1);
-        j += 2; 
-      }      
+        j += 2;
+      }
       data.push(rowData);
     }
   
