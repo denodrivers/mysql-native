@@ -62,3 +62,6 @@ A non-blocking async API is planned but for now use the battle tested [`denodriv
 
 `mysql_native` dispatches almost zero-overhead calls to `libmysqlclient` using Deno FFI. 
 
+![image](https://user-images.githubusercontent.com/34997667/189265801-b77a77e1-a5e2-44e9-b308-09bde03f3d42.png)
+
+[View source](bench/02)
