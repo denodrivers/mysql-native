@@ -24,4 +24,6 @@ async function bench(fun) {
 }
 
 await connection.connect();
-await bench(() => connection.query({ sql: `SELECT * FROM test`, rowsAsArray: true }));
+await bench(() =>
+  connection.query({ sql: `SELECT * FROM test`, rowsAsArray: true })
+);

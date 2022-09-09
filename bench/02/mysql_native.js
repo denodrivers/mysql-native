@@ -28,7 +28,7 @@ async function bench(fun) {
 }
 
 await bench(async () => {
-    (await db.query(`SELECT * FROM test`)).all();
+  (await db.query(`SELECT * FROM test`)).all();
 });
 
 // db.execute(`TRUNCATE TABLE test`);

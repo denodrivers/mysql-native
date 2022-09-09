@@ -29,4 +29,3 @@ async function bench(fun) {
 }
 
 await bench(() => db.query(`SELECT * FROM test`));
-

@@ -1,74 +1,4 @@
-const symbols = {
-  mysql_init: {
-    parameters: ["pointer"],
-    result: "pointer",
-  },
-  mysql_real_connect: {
-    parameters: [
-      "pointer",
-      "buffer",
-      "buffer",
-      "buffer",
-      "buffer",
-      "u32",
-      "buffer",
-      "u32",
-    ],
-    result: "void",
-  },
-  mysql_real_query: {
-    parameters: ["pointer", "buffer", "u32"],
-    result: "void",
-  },
-  mysql_stmt_init: {
-    parameters: ["pointer"],
-    result: "pointer",
-  },
-  mysql_stmt_prepare: {
-    parameters: ["pointer", "buffer", "u32"],
-    result: "void",
-  },
-  mysql_stmt_execute: {
-    parameters: ["pointer"],
-    result: "void",
-  },
-  mysql_stmt_close: {
-    parameters: ["pointer"],
-    result: "void",
-  },
-  mysql_close: {
-    parameters: ["pointer"],
-    result: "void",
-  },
-  mysql_stmt_error: {
-    parameters: ["pointer"],
-    result: "pointer",
-  },
-  mysql_error: {
-    parameters: ["pointer"],
-    result: "pointer",
-  },
-  mysql_free_result: {
-    parameters: ["pointer"],
-    result: "void",
-  },
-  mysql_store_result: {
-    parameters: ["pointer"],
-    result: "pointer",
-  },
-  mysql_num_rows: {
-    parameters: ["pointer"],
-    result: "u32",
-  },
-  mysql_num_fields: {
-    parameters: ["pointer"],
-    result: "u32",
-  },
-  mysql_fetch_row: {
-    parameters: ["pointer"],
-    result: "pointer",
-  },
-} as const;
+import lib from "./sys.ts";
 
 const {
   mysql_init,
@@ -87,10 +17,7 @@ const {
   mysql_num_fields,
   mysql_fetch_row,
   mysql_library_init,
-} = Deno.dlopen(
-  "/opt/homebrew/opt/mysql-client/lib/libmysqlclient.dylib",
-  symbols,
-).symbols;
+} = lib;
 
 const { getArrayBuffer, getCString } = Deno.UnsafePointerView;
 const encode = Deno.core?.encode || ((s) => new TextEncoder().encode(s));
@@ -163,7 +90,7 @@ export class Connection {
     return stmt;
   }
 
-  async query(query: string) {
+  query(query: string) {
     this.#clearResult();
     mysql_real_query(this.#handle, cstr(query), query.length);
     unwrapErr(mysql_error(this.#handle));
