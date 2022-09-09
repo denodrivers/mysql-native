@@ -1,6 +1,6 @@
 # mysql-native
 
-The fastest [[1]](#speed) JavaScript MySQL client.
+The fastest [[1]](#benchmarks) JavaScript MySQL client.
 
 ```js
 import { Connection } from "https://deno.land/x/mysql_native/mod.ts";
@@ -44,3 +44,21 @@ const tx = conn.tx((conn) => {
   return conn.query("...");
 });
 ```
+
+### Features
+
+It exposes a synchronous & minimal API.
+
+A non-blocking async API is planned but for now use the battle tested [`denodrivers/mysql`](https://deno.land/x/mysql) module.
+
+- [x] Performance
+- [x] Prepared statements
+- [ ] Bind parameters
+- [ ] Non blocking API 
+- [ ] SSL
+- [ ] Connection pooling
+
+### Benchmarks
+
+`mysql_native` dispatches almost zero-overhead calls to `libmysqlclient` using Deno FFI. 
+

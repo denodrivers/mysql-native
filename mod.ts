@@ -86,6 +86,7 @@ const {
   mysql_store_result,
   mysql_num_fields,
   mysql_fetch_row,
+  mysql_library_init,
 } = Deno.dlopen(
   "/opt/homebrew/opt/mysql-client/lib/libmysqlclient.dylib",
   symbols,
@@ -162,7 +163,7 @@ export class Connection {
     return stmt;
   }
 
-  query(query: string) {
+  async query(query: string) {
     this.#clearResult();
     mysql_real_query(this.#handle, cstr(query), query.length);
     unwrapErr(mysql_error(this.#handle));
