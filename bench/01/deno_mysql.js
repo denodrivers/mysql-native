@@ -9,11 +9,16 @@ const db = await new Client().connect({
 await db.execute(
   `CREATE TABLE IF NOT EXISTS test ( id INT, name VARCHAR(255) )`,
 );
-Deno.bench("insert", async () => {
-  await db.execute(`INSERT INTO test VALUES (1, "test")`);
-});
+try {
+  await db.execute(`TRUNCATE TABLE test`);
+} catch {}
+const x = await db.query(`SELECT * FROM test`);
+if (x.length !== 0) throw new Error("Table is not empty");
 
 Deno.bench("select", async () => {
   await db.query(`SELECT * FROM test`);
 });
-await db.execute(`TRUNCATE TABLE test`);
+
+Deno.bench("insert", async () => {
+  await db.execute(`INSERT INTO test VALUES (1, "test")`);
+});

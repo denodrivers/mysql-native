@@ -1,7 +1,7 @@
 {
   "tasks": {
-    "bench": "deno bench -A --unstable --no-check bench/deno_ffi.js",
-    "bench-deno-mysql": "deno bench -A --unstable --no-check bench/deno_mysql.js",
-    "bench-node": "node bench/node.mjs"
+    "bench": "deno bench -A --unstable --no-check bench/01/deno_ffi.js",
+    "bench-deno-mysql": "deno bench -A --unstable --no-check bench/01/deno_mysql.js",
+    "bench-node": "node bench/01/node.mjs"
   }
 }
